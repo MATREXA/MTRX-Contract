@@ -7,6 +7,9 @@ import './zeppelin/ownership/HasNoTokens.sol';
 import './MatreXaToken.sol';
 
 
+/**
+ * @title MatreXa Crowdsale
+ */
 contract MatreXaCrowdsale is Ownable, HasNoContracts, HasNoTokens {
     using SafeMath for uint256;
 
@@ -73,6 +76,7 @@ contract MatreXaCrowdsale is Ownable, HasNoContracts, HasNoTokens {
      * @param _goal Amount of ether (in wei) to receive for crowdsale to be successful
      * @param _ownerTokens Amount of MTRX tokens (in wei) minted to owner
      * @param _availableSupply Amount of MTRX tokens (in wei) to distribute during ICO
+     * @param _allowTransferTimestamp timestamp after wich transfer of tokens should be allowed
      */
     function MatreXaCrowdsale(
         uint256 _startTimestamp, 
@@ -80,7 +84,8 @@ contract MatreXaCrowdsale is Ownable, HasNoContracts, HasNoTokens {
         uint256[] _prices, 
         uint256 _goal,
         uint256 _ownerTokens,
-        uint256 _availableSupply
+        uint256 _availableSupply,
+        uint256 _allowTransferTimestamp
     ) {
 
         require(_periods.length > 0);                   //There should be at least one period
@@ -99,6 +104,7 @@ contract MatreXaCrowdsale is Ownable, HasNoContracts, HasNoTokens {
         require(reachableCap > goal);           //Check if it is possible to reach minimumCap (not accurate check, but it's ok) 
 
         mtrx = new MatreXaToken();
+        mtrx.setAllowTransferTimestamp(_allowTransferTimestamp);
         mtrx.mint(owner, _ownerTokens);
     }
 
